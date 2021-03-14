@@ -1,0 +1,31 @@
+import pandas as pd
+import numpy as np 
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import MinMaxScaler
+
+df = pd.read_csv("points.txt")
+
+plt.scatter(df.X,df['Y'])
+plt.xlabel('X')
+plt.ylabel('Y')
+
+km = KMeans(n_clusters=2, random_state=0)
+y_predicted = km.fit_predict(df[['X','Y']])
+y_predicted = y_predicted+1
+
+df['cluster']=y_predicted
+print (df)
+
+km.cluster_centers_
+
+df1 = df[df.cluster==0]
+df2 = df[df.cluster==1]
+plt.scatter(df1.X,df1['Y'],color='blue')
+plt.scatter(df2.X,df2['Y'],color='orange')
+plt.scatter(km.cluster_centers_[:,0],km.cluster_centers_[:,1],color='black',marker='x',label='centroid')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend()
+
+df.to_csv('./output.txt', index=False)
